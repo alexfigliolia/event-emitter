@@ -1,6 +1,6 @@
 {
 	"name": "@figliolia/event-emitter",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "A basic event emitter for all platforms",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",

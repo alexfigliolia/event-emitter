@@ -1,17 +1,17 @@
-# @generics/event-emitter
+# @figliolia/event-emitter
 
 ### Installation
 
 ```bash
-npm i -S @generics/event-emitter;
+npm i -S @figliolia/event-emitter;
 # or yarn
-yarn add @generics/event-emitter;
+yarn add @figliolia/event-emitter;
 ```
 
 ### Basic Usage
 #### Creating an instance
 ```typescript
-import { EventEmitter } from "@generics/event-emitter";
+import { EventEmitter } from "@figliolia/event-emitter";
 
 export const MyEmitter = new EventEmitter();
 ```
@@ -38,7 +38,7 @@ MyEmitter.off("some-event", ID);
 ### With Strict Typescript
 #### Creating an Instance
 ```typescript
-import { EventEmitter } from "@generics/event-emitter";
+import { EventEmitter } from "@figliolia/event-emitter";
 
 type MyEvents = {
 	"my-event1": {

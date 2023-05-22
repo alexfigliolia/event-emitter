@@ -41,11 +41,11 @@ MyEmitter.off("some-event", ID);
 import { EventEmitter } from "@figliolia/event-emitter";
 
 type MyEvents = {
-	"my-event1": {
-		type: "my-event1",
-		datapoint: number;
-		anotherDatapoint: any
-	}
+	"event-0": {
+		dataPoint: number;
+		anotherDataPoint: any
+	},
+	"event-1": Map<string, () => void>
 	// ... and so on
 }
 
@@ -56,16 +56,14 @@ export const MyEmitter = new EventEmitter<MyEvents>();
 ```typescript
 import { MyEmitter } from "./path/to/myEmitter";
 
-MyEmitter.emit("my-event1", {
-	type: "my-event1",
-	datapoint: 2,
-	anotherDatapoint: [1, 2, 3]
+MyEmitter.emit("event-0", {
+	dataPoint: 2,
+	anotherDataPoint: [1, 2, 3]
 });
 
 // Fails typescript validation
-MyEmitter.emit("my-event1", {
-	type: "my-event1",
-	datapoint: "one",
+MyEmitter.emit("event-0", {
+	dataPoint: "one",
 });
 
 // Fails typescript validation
@@ -76,7 +74,7 @@ MyEmitter.emit("my-event2", /* event */);
 ```typescript
 import { MyEmitter } from "./path/to/myEmitter";
 
-MyEmitter.on("my-event1", (event: MyEvents["my-events1"]) => {
+MyEmitter.on("event-0", (event) => {
 	// any logic you wish!
 });
 

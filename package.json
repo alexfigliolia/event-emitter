@@ -1,6 +1,6 @@
 {
 	"name": "@figliolia/event-emitter",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"description": "A basic event emitter for all platforms",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -11,7 +11,7 @@
 	"scripts": {
 		"test": "jest",
 		"coverage": "jest --env=jsdom --coverage --testResultsProcessor ./node_modules/jest-junit",
-		"build": "tsc --project tsconfig.build.json",
+		"build": "rm -rf dist && tsc --project tsconfig.build.json",
 		"lint": "tsc --noemit && eslint ./ --fix"
 	},
 	"repository": {

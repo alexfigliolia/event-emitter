@@ -28,7 +28,7 @@ MyEmitter.emit("some-event", /* any data */);
 import { MyEmitter } from "./path/to/myEmitter";
 
 const ID = MyEmitter.on("some-event", (event) => {
-	// any logic you wish!
+  // any logic you wish!
 });
 
 // Cleaning up listeners
@@ -41,12 +41,12 @@ MyEmitter.off("some-event", ID);
 import { EventEmitter } from "@figliolia/event-emitter";
 
 type MyEvents = {
-	"event-0": {
-		dataPoint: number;
-		anotherDataPoint: any
-	},
-	"event-1": Map<string, () => void>
-	// ... and so on
+  "event-0": {
+    dataPoint: number;
+    anotherDataPoint: any
+  },
+  "event-1": Map<string, () => void>
+  // ... and so on
 }
 
 export const MyEmitter = new EventEmitter<MyEvents>();
@@ -57,13 +57,13 @@ export const MyEmitter = new EventEmitter<MyEvents>();
 import { MyEmitter } from "./path/to/myEmitter";
 
 MyEmitter.emit("event-0", {
-	dataPoint: 2,
-	anotherDataPoint: [1, 2, 3]
+  dataPoint: 2,
+  anotherDataPoint: [1, 2, 3]
 });
 
 // Fails typescript validation
 MyEmitter.emit("event-0", {
-	dataPoint: "one",
+  dataPoint: "one",
 });
 
 // Fails typescript validation
@@ -75,7 +75,7 @@ MyEmitter.emit("my-event2", /* event */);
 import { MyEmitter } from "./path/to/myEmitter";
 
 MyEmitter.on("event-0", (event) => {
-	// any logic you wish!
+  // any logic you wish!
 });
 
 // Fails typescript validation

@@ -56,6 +56,12 @@ export class EventEmitter<T extends MessageMap> extends Map<
     return ID;
   }
 
+  /**
+   * Off
+   *
+   * Removes an event handler from the `EventEmitter` given an
+   * event and lister ID
+   */
   public off<E extends keyof T>(event: E, ID: string) {
     const index = this.get(event);
     if (index) {
@@ -64,10 +70,9 @@ export class EventEmitter<T extends MessageMap> extends Map<
   }
 
   /**
-   * Off
+   * Emit
    *
-   * Removes an event handler from the `EventEmitter` given an
-   * event and lister ID
+   * Streams an event to all subscribers
    */
   public emit<E extends keyof T>(event: E, param: T[E]) {
     const index = this.get(event);

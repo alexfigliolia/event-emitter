@@ -80,4 +80,17 @@ export class EventEmitter<T extends MessageMap> extends Map<
       index.execute(param);
     }
   }
+
+  /**
+   * Emit
+   *
+   * Streams an event to all subscribers handling
+   * asynchronous subscriptions as blocking tasks
+   */
+  public async emitBlocking<E extends keyof T>(event: E, param: T[E]) {
+    const index = this.get(event);
+    if (index) {
+      await index.executeBlocking(param);
+    }
+  }
 }

@@ -35,4 +35,17 @@ export class Indexer<
       void listener(...params);
     }
   }
+
+  /**
+   * Execute Blocking
+   *
+   * Iterates each lister on the map and executes it. Using
+   * this method with cause asynchronous operations to be
+   * handled synchronously
+   */
+  public async executeBlocking(...params: Parameters<T>) {
+    for (const [_, listener] of this) {
+      await listener(...params);
+    }
+  }
 }

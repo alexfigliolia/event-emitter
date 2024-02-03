@@ -22,6 +22,15 @@ export class AutoIncrementingID {
   }
 
   /**
+   * Last
+   *
+   * Returns the last generated ID
+   */
+  public last() {
+    return `${this.incrementor}`;
+  }
+
+  /**
    * Reset
    *
    * Resets the `AutoIncrementingID`'s incrementor back to 0

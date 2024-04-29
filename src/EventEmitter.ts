@@ -27,7 +27,7 @@ import type { Listener, MessageMap } from "./types";
  * emitter.off("event-2", ID2);
  * ```
  */
-export class EventEmitter<T extends MessageMap> extends Map<
+export class EventEmitter<T extends MessageMap = MessageMap> extends Map<
   keyof T,
   Indexer<Listener<any>>
 > {
@@ -85,12 +85,28 @@ export class EventEmitter<T extends MessageMap> extends Map<
    * Emit
    *
    * Streams an event to all subscribers handling
-   * asynchronous subscriptions as blocking tasks
+   * asynchronous subscriptions as sequential blocking tasks.
+   * Returns a promise that'll resolve after all tasks complete
    */
-  public async emitBlocking<E extends keyof T>(event: E, param: T[E]) {
+  public emitBlocking<E extends keyof T>(event: E, param: T[E]) {
     const index = this.get(event);
     if (index) {
-      await index.executeBlocking(param);
+      return index.executeBlocking(param);
+    }
+  }
+
+  /**
+   * Emit
+   *
+   * Streams an event to all subscribers handling
+   * asynchronous subscriptions as concurrent tasks.
+   * Returns a promise that'll resolve after all tasks
+   * complete
+   */
+  public async emitConcurrent<E extends keyof T>(event: E, param: T[E]) {
+    const index = this.get(event);
+    if (index) {
+      return index.executeConcurrent(param);
     }
   }
 }

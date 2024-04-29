@@ -3,9 +3,9 @@
 ### Installation
 
 ```bash
-npm i -S @figliolia/event-emitter;
+npm i -S @figliolia/event-emitter
 # or yarn
-yarn add @figliolia/event-emitter;
+yarn add @figliolia/event-emitter
 ```
 
 ### Basic Usage
@@ -20,33 +20,30 @@ export const MyEmitter = new EventEmitter();
 ```typescript
 import { MyEmitter } from "./path/to/myEmitter";
 
-MyEmitter.emit("some-event", /* any data */);
+MyEmitter.emit("my-event", /* any data to send to subscribers */);
 ```
 
 #### Subscribing to Events
 ```typescript
 import { MyEmitter } from "./path/to/myEmitter";
 
-const ID = MyEmitter.on("some-event", (event) => {
-  // any logic you wish!
-});
+const ID = MyEmitter.on("my-event", (data) => {});
 
 // Cleaning up listeners
-MyEmitter.off("some-event", ID);
+MyEmitter.off("my-event", ID);
 ```
 
 ### With Strict Typescript
-#### Creating an Instance
+#### Creating a type-safe Instance
 ```typescript
 import { EventEmitter } from "@figliolia/event-emitter";
 
 type MyEvents = {
-  "event-0": {
+  event: {
     dataPoint: number;
     anotherDataPoint: any
   },
-  "event-1": Map<string, () => void>
-  // ... and so on
+  // ...rest
 }
 
 export const MyEmitter = new EventEmitter<MyEvents>();
@@ -56,28 +53,28 @@ export const MyEmitter = new EventEmitter<MyEvents>();
 ```typescript
 import { MyEmitter } from "./path/to/myEmitter";
 
-MyEmitter.emit("event-0", {
+MyEmitter.emit("event", {
   dataPoint: 2,
   anotherDataPoint: [1, 2, 3]
 });
 
-// Fails typescript validation
-MyEmitter.emit("event-0", {
+// Incorrect payload types fail typescript validation
+MyEmitter.emit("event", {
   dataPoint: "one",
 });
 
-// Fails typescript validation
-MyEmitter.emit("my-event2", /* event */);
+// Unsupported events fail typescript validation
+MyEmitter.emit("another-event", /* event */);
 ```
 
 #### Subscribing to Events
 ```typescript
 import { MyEmitter } from "./path/to/myEmitter";
 
-MyEmitter.on("event-0", (event) => {
-  // any logic you wish!
+MyEmitter.on("event", (data) => {
+  // data is strictly typed to the "event"
 });
 
-// Fails typescript validation
-MyEmitter.on("my-event2", /* handler */);
+// Subscriptions to unsupported events fail typescript validation
+MyEmitter.on("another-event", /* handler */);
 ```

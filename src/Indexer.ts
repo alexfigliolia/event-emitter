@@ -1,4 +1,5 @@
 import { AutoIncrementingID } from "./AutoIncrementingID";
+import type { Listener } from "./types";
 
 /**
  * Indexer
@@ -27,7 +28,7 @@ export class Indexer<
   /**
    * Execute
    *
-   * Iterates each lister on the map and executes it with
+   * Iterates over each lister on the map and executes it with
    * the provided parameters
    */
   public execute(...params: Parameters<T>) {
@@ -39,13 +40,28 @@ export class Indexer<
   /**
    * Execute Blocking
    *
-   * Iterates each lister on the map and executes it. Using
-   * this method with cause asynchronous operations to be
-   * handled synchronously
+   * Iterates over each lister on the map and executes it. Using
+   * this method will cause asynchronous operations to be handled
+   * as sequential blocking tasks
    */
   public async executeBlocking(...params: Parameters<T>) {
     for (const [_, listener] of this) {
       await listener(...params);
     }
+  }
+
+  /**
+   * Execute Blocking
+   *
+   * Iterates over each lister on the map and executes it. Using
+   * this method will cause asynchronous operations to be handled
+   * concurrently
+   */
+  public async executeConcurrent(...params: Parameters<T>) {
+    const tasks: ReturnType<Listener<T>>[] = [];
+    for (const [_, listener] of this) {
+      tasks.push(listener(...params));
+    }
+    return Promise.all(tasks);
   }
 }

@@ -1,4 +1,4 @@
-import { Indexer } from "./Indexer";
+import { Subscriptable } from "./Subscriptable";
 import type { Listener, MessageMap } from "./types";
 
 /**
@@ -27,10 +27,8 @@ import type { Listener, MessageMap } from "./types";
  * emitter.off("event-2", ID2);
  * ```
  */
-export class EventEmitter<T extends MessageMap = MessageMap> extends Map<
-  keyof T,
-  Indexer<Listener<any>>
-> {
+export class EventEmitter<T extends MessageMap = MessageMap> {
+  public readonly storage = new Map<keyof T, Subscriptable<Listener<any>>>();
   /**
    * On
    *
@@ -50,9 +48,9 @@ export class EventEmitter<T extends MessageMap = MessageMap> extends Map<
    * ```
    */
   public on<E extends keyof T>(event: E, listener: Listener<T[E]>) {
-    const index = this.get(event) || new Indexer();
-    const ID = index.register(listener);
-    this.set(event, index);
+    const subscriptable = this.storage.get(event) || new Subscriptable();
+    const ID = subscriptable.register(listener);
+    this.storage.set(event, subscriptable);
     return ID;
   }
 
@@ -63,9 +61,9 @@ export class EventEmitter<T extends MessageMap = MessageMap> extends Map<
    * event and lister ID
    */
   public off<E extends keyof T>(event: E, ID: string) {
-    const index = this.get(event);
-    if (index) {
-      return index.delete(ID);
+    const subscriptable = this.storage.get(event);
+    if (subscriptable) {
+      return subscriptable.remove(ID);
     }
   }
 
@@ -75,9 +73,9 @@ export class EventEmitter<T extends MessageMap = MessageMap> extends Map<
    * Streams an event to all subscribers
    */
   public emit<E extends keyof T>(event: E, param: T[E]) {
-    const index = this.get(event);
-    if (index) {
-      index.execute(param);
+    const subscriptable = this.storage.get(event);
+    if (subscriptable) {
+      subscriptable.execute(param);
     }
   }
 
@@ -89,14 +87,14 @@ export class EventEmitter<T extends MessageMap = MessageMap> extends Map<
    * Returns a promise that'll resolve after all tasks complete
    */
   public emitBlocking<E extends keyof T>(event: E, param: T[E]) {
-    const index = this.get(event);
-    if (index) {
-      return index.executeBlocking(param);
+    const subscriptable = this.storage.get(event);
+    if (subscriptable) {
+      return subscriptable.executeBlocking(param);
     }
   }
 
   /**
-   * Emit
+   * Emit Concurrent
    *
    * Streams an event to all subscribers handling
    * asynchronous subscriptions as concurrent tasks.
@@ -104,9 +102,9 @@ export class EventEmitter<T extends MessageMap = MessageMap> extends Map<
    * complete
    */
   public async emitConcurrent<E extends keyof T>(event: E, param: T[E]) {
-    const index = this.get(event);
-    if (index) {
-      return index.executeConcurrent(param);
+    const subscriptable = this.storage.get(event);
+    if (subscriptable) {
+      return subscriptable.executeConcurrent(param);
     }
   }
 }

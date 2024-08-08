@@ -1,17 +1,16 @@
 import { AutoIncrementingID } from "./AutoIncrementingID";
-import type { Listener } from "./types";
+import type { Callback, Listener } from "./types";
 
 /**
- * Indexer
+ * Subscriptable
  *
- * Storage for the `EventEmitter`'s listeners. The `Indexer`
+ * Storage for the `EventEmitter`'s listeners. The `Subscriptable`
  * is an extension of the map prototype that provides ordered
  * indexing of callbacks with unique identifier for each index
  */
-export class Indexer<
-  T extends (...args: any[]) => void | Promise<void>
-> extends Map<string, T> {
-  private IDs = new AutoIncrementingID();
+export class Subscriptable<T extends Callback> {
+  public readonly storage = new Map<string, T>();
+  private readonly IDs = new AutoIncrementingID();
 
   /**
    * Register
@@ -21,8 +20,18 @@ export class Indexer<
    */
   public register(callback: T) {
     const ID = this.IDs.get();
-    this.set(ID, callback);
+    this.storage.set(ID, callback);
     return ID;
+  }
+
+  /**
+   * Remove
+   *
+   * Deletes a callback by ID. Returns true if a callback with
+   * a corresponding ID existed, or false if it does not
+   */
+  public remove(ID: string) {
+    return this.storage.delete(ID);
   }
 
   /**
@@ -32,7 +41,7 @@ export class Indexer<
    * the provided parameters
    */
   public execute(...params: Parameters<T>) {
-    for (const [_, listener] of this) {
+    for (const listener of this) {
       void listener(...params);
     }
   }
@@ -45,13 +54,13 @@ export class Indexer<
    * as sequential blocking tasks
    */
   public async executeBlocking(...params: Parameters<T>) {
-    for (const [_, listener] of this) {
+    for (const listener of this) {
       await listener(...params);
     }
   }
 
   /**
-   * Execute Blocking
+   * Execute Concurrent
    *
    * Iterates over each lister on the map and executes it. Using
    * this method will cause asynchronous operations to be handled
@@ -59,9 +68,15 @@ export class Indexer<
    */
   public async executeConcurrent(...params: Parameters<T>) {
     const tasks: ReturnType<Listener<T>>[] = [];
-    for (const [_, listener] of this) {
+    for (const listener of this) {
       tasks.push(listener(...params));
     }
     return Promise.all(tasks);
+  }
+
+  *[Symbol.iterator]() {
+    for (const [_, listener] of this.storage) {
+      yield listener;
+    }
   }
 }

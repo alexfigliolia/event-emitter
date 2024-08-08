@@ -1,3 +1,7 @@
 export type MessageMap<T = any> = Record<string, T>;
 
-export type Listener<T> = (event: T) => void | Promise<void>;
+export type Callback<A extends any[] = never[], V = void | Promise<void>> = (
+  ...args: A
+) => V;
+
+export type Listener<T> = Callback<[event: T]>;

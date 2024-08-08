@@ -1,28 +1,43 @@
 {
+	"tsx": {
+		"typeCheck": false,
+		"compilerOptions": {
+			"module": "CommonJS",
+			"moduleResolution": "Node"
+		}
+	},
 	"compilerOptions": {
 		"target": "ES2015",
 		"lib": [
-			"dom",
-			"dom.iterable",
-			"esnext"
+			"DOM",
+			"ESNext"
 		],
-		"allowJs": true,
-		"skipLibCheck": true,
+		"module": "ESNext",
+		"moduleResolution": "Node",
 		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"strict": true,
 		"forceConsistentCasingInFileNames": true,
-		"noFallthroughCasesInSwitch": true,
-		"module": "esnext",
-		"moduleResolution": "node",
+		"strict": true,
+		"skipLibCheck": true,
+		"allowJs": false,
+		"noImplicitAny": true,
 		"resolveJsonModule": true,
+		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
+		"noFallthroughCasesInSwitch": true,
 		"isolatedModules": true,
-		"noEmit": true,
+		"noEmit": true
 	},
 	"include": [
 		"src",
-		"**/*ts",
-		"**/*.js",
-		"**/*.json"
+		"ci",
+		".eslintrc.cjs",
+		"**/*.json",
+		"**/*.ts",
+		"**/*.js"
+	],
+	"exclude": [
+		"coverage",
+		"dist",
+		"node_modules"
 	]
 }

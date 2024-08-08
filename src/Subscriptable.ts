@@ -74,6 +74,15 @@ export class Subscriptable<T extends Callback> {
     return Promise.all(tasks);
   }
 
+  /**
+   * Length
+   *
+   * Returns the number of entries on the instance
+   */
+  public get length() {
+    return this.storage.size;
+  }
+
   *[Symbol.iterator]() {
     for (const [_, listener] of this.storage) {
       yield listener;

@@ -62,9 +62,14 @@ export class EventEmitter<T extends MessageMap = MessageMap> {
    */
   public off<E extends keyof T>(event: E, ID: string) {
     const subscriptable = this.storage.get(event);
-    if (subscriptable) {
-      return subscriptable.remove(ID);
+    if (!subscriptable) {
+      return false;
     }
+    const removed = subscriptable.remove(ID);
+    if (!subscriptable.length) {
+      this.storage.delete(event);
+    }
+    return removed;
   }
 
   /**
@@ -72,10 +77,10 @@ export class EventEmitter<T extends MessageMap = MessageMap> {
    *
    * Streams an event to all subscribers
    */
-  public emit<E extends keyof T>(event: E, param: T[E]) {
+  public emit<E extends keyof T>(event: E, payload: T[E]) {
     const subscriptable = this.storage.get(event);
     if (subscriptable) {
-      subscriptable.execute(param);
+      subscriptable.execute(payload);
     }
   }
 
@@ -86,10 +91,10 @@ export class EventEmitter<T extends MessageMap = MessageMap> {
    * asynchronous subscriptions as sequential blocking tasks.
    * Returns a promise that'll resolve after all tasks complete
    */
-  public emitBlocking<E extends keyof T>(event: E, param: T[E]) {
+  public emitBlocking<E extends keyof T>(event: E, payload: T[E]) {
     const subscriptable = this.storage.get(event);
     if (subscriptable) {
-      return subscriptable.executeBlocking(param);
+      return subscriptable.executeBlocking(payload);
     }
   }
 
@@ -101,10 +106,10 @@ export class EventEmitter<T extends MessageMap = MessageMap> {
    * Returns a promise that'll resolve after all tasks
    * complete
    */
-  public async emitConcurrent<E extends keyof T>(event: E, param: T[E]) {
+  public async emitConcurrent<E extends keyof T>(event: E, payload: T[E]) {
     const subscriptable = this.storage.get(event);
     if (subscriptable) {
-      return subscriptable.executeConcurrent(param);
+      return subscriptable.executeConcurrent(payload);
     }
   }
 }

@@ -29,6 +29,7 @@ import type { Listener, MessageMap } from "./types";
  */
 export class EventEmitter<T extends MessageMap = MessageMap> {
   public readonly storage = new Map<keyof T, Subscriptable<Listener<any>>>();
+
   /**
    * On
    *

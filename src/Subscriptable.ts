@@ -67,7 +67,7 @@ export class Subscriptable<T extends Callback> {
    * concurrently
    */
   public async executeConcurrent(...params: Parameters<T>) {
-    const tasks: ReturnType<Listener<T>>[] = [];
+    const tasks: ReturnType<Listener<Parameters<T>>>[] = [];
     for (const listener of this) {
       tasks.push(listener(...params));
     }

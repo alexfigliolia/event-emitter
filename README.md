@@ -39,11 +39,10 @@ MyEmitter.off("my-event", ID);
 import { EventEmitter } from "@figliolia/event-emitter";
 
 type MyEvents = {
-  event: {
+  event: [ /* param list */ {
     dataPoint: number;
     anotherDataPoint: any
-  },
-  // ...rest
+  }],
 }
 
 export const MyEmitter = new EventEmitter<MyEvents>();

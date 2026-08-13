@@ -10,7 +10,7 @@
  * ```
  */
 export class AutoIncrementingID {
-  private incrementor = typeof BigInt === "undefined" ? -1 : BigInt(-1);
+  private incrementor = this.getInitialIncrementor();
 
   /**
    * Get
@@ -36,6 +36,10 @@ export class AutoIncrementingID {
    * Resets the `AutoIncrementingID`'s incrementor back to 0
    */
   public reset() {
-    this.incrementor = typeof BigInt === "undefined" ? -1 : BigInt(-1);
+    this.incrementor = this.getInitialIncrementor();
+  }
+
+  private getInitialIncrementor() {
+    return typeof BigInt === "undefined" ? -1 : BigInt(-1);
   }
 }

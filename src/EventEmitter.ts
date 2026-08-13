@@ -9,8 +9,8 @@ import type { Listener, MessageMap } from "./types";
  *
  * ```typescript
  * const emitter = new EventEmitter<{
- *   "event-1": number[],
- *   "event-2": Map<string, () => {}>
+ *   "event-1": [number[]],
+ *   "event-2": [Map<string, () => {}>]
  * }>();
  *
  * // Subscribe to permitted events
@@ -78,10 +78,10 @@ export class EventEmitter<T extends MessageMap = MessageMap> {
    *
    * Streams an event to all subscribers
    */
-  public emit<E extends keyof T>(event: E, payload: T[E]) {
+  public emit<E extends keyof T>(event: E, ...payload: T[E]) {
     const subscriptable = this.storage.get(event);
     if (subscriptable) {
-      subscriptable.execute(payload);
+      subscriptable.execute(...payload);
     }
   }
 
@@ -95,7 +95,7 @@ export class EventEmitter<T extends MessageMap = MessageMap> {
   public emitBlocking<E extends keyof T>(event: E, payload: T[E]) {
     const subscriptable = this.storage.get(event);
     if (subscriptable) {
-      return subscriptable.executeBlocking(payload);
+      return subscriptable.executeBlocking(...payload);
     }
   }
 
@@ -110,7 +110,7 @@ export class EventEmitter<T extends MessageMap = MessageMap> {
   public async emitConcurrent<E extends keyof T>(event: E, payload: T[E]) {
     const subscriptable = this.storage.get(event);
     if (subscriptable) {
-      return subscriptable.executeConcurrent(payload);
+      return subscriptable.executeConcurrent(...payload);
     }
   }
 }
